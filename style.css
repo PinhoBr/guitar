@@ -1,0 +1,281 @@
+/* Variáveis CSS para fácil ajuste de cores e tamanhos */
+:root {
+    /* Cores Dark/LED Suave */
+    --bg-color: #08081a; /* Roxo escuro bem profundo */
+    --game-bg-color: #120f2b; /* Azul escuro quase preto */
+    --lane-color: #1a1a33; /* Azul escuro acinzentado */
+    --target-color: #8aff8a; /* Verde neon */
+    --hit-effect-color: #ccffff; /* Ciano claro neon */
+    --score-color: #ff33bb; /* Rosa neon */
+    --button-bg-color: #2b2b4d; /* Azul escuro do botão */
+    --button-hover-bg-color: #3f3f6e; /* Azul escuro mais claro no hover */
+    --text-color: #e0e0e0; /* Cinza claro para leitura */
+
+    --feedback-perfect: #00ff00; /* Verde neon */
+    --feedback-good: #00ffff; /* Ciano neon */
+    --feedback-meh: #ffff00; /* Amarelo neon */
+    --feedback-miss: #ff0000; /* Vermelho vibrante */
+
+    /* Health Bar */
+    --health-bar-fill-color: linear-gradient(to right, #66ff66, #33cc33); /* Verde vibrante */
+    --health-bar-border-color: #4CAF50;
+
+    /* Tamanhos e offsets */
+    --arrow-size: 50px;
+    --target-size: 60px;
+    --lane-width-percentage: 20%;
+    --game-max-width: 900px;
+    --game-height-vh: 70vh;
+    --target-bottom-offset: 10px; /* Distância do target da base da lane */
+    --lane-padding-bottom: calc(var(--target-size) + var(--target-bottom-offset)); /* Espaço pro target */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-family: 'Exo 2', sans-serif; /* Nova fonte mais arredondada e suave */
+    user-select: none;
+    overflow: hidden;
+}
+
+h1 {
+    margin: 20px 0 5px;
+    font-size: 3.2em;
+    font-family: 'Orbitron', sans-serif; /* Mantida para títulos */
+    color: var(--score-color);
+    text-shadow: 0 0 12px var(--score-color), 0 0 25px var(--score-color);
+}
+
+#score {
+    margin: 5px 0 15px;
+    font-size: 2.4em;
+    color: var(--score-color);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--score-color);
+}
+
+/* Health Bar */
+.health-bar-container {
+    width: 80%;
+    max-width: 600px;
+    height: 25px;
+    background-color: #333;
+    border: 2px solid var(--health-bar-border-color);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+}
+
+.health-bar {
+    width: 100%; /* Começa cheio */
+    height: 100%;
+    background: var(--health-bar-fill-color);
+    border-radius: 10px;
+    transition: width 0.3s ease-out; /* Transição suave para o tamanho */
+}
+
+.game-container {
+    position: relative;
+    display: flex;
+    width: 100vw;
+    max-width: var(--game-max-width);
+    height: var(--game-height-vh);
+    justify-content: space-around;
+    align-items: flex-end;
+    border: 2px solid #333;
+    background: linear-gradient(to bottom, var(--game-bg-color), #0a081a); /* Gradiente sutil */
+    border-radius: 15px;
+    box-shadow: 0 0 35px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.6);
+    overflow: hidden;
+}
+
+.game {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: space-around;
+    align-items: flex-end;
+    position: relative;
+    padding-bottom: var(--lane-padding-bottom);
+}
+
+.lane {
+    position: relative;
+    width: var(--lane-width-percentage);
+    height: 100%;
+    background: linear-gradient(to bottom, var(--lane-color), #0f0d22); /* Gradiente na pista */
+    border-radius: 18px; /* Mais arredondado */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    box-shadow: inset 0 0 18px rgba(0,0,0,0.7);
+    margin: 0 6px;
+}
+
+/* Target onde as bolinhas devem chegar */
+.target {
+    position: absolute;
+    bottom: var(--target-bottom-offset);
+    width: var(--target-size);
+    height: var(--target-size);
+    border: 5px solid var(--target-color);
+    border-radius: 50%;
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 0 18px 6px var(--target-color), inset 0 0 10px 3px rgba(255,255,255,0.3); /* Brilho interno */
+}
+
+/* Bolinhas (setas) */
+.arrow {
+    position: absolute;
+    width: var(--arrow-size);
+    height: var(--arrow-size);
+    border-radius: 50%;
+    cursor: pointer;
+    transform-origin: center center;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    z-index: 5;
+    box-shadow: 0 0 10px 4px rgba(255,255,255,0.5); /* Brilho mais forte */
+}
+
+/* Cores das bolinhas (mais vibrantes e "LED") */
+.arrow[data-lane="a"] { background-color: #ff0099; /* Rosa forte */ }
+.arrow[data-lane="s"] { background-color: #00ffcc; /* Ciano/verde */ }
+.arrow[data-lane="j"] { background-color: #ffcc00; /* Laranja/ouro */ }
+.arrow[data-lane="k"] { background-color: #66ccff; /* Azul claro */ }
+
+/* Animação queda - COMEÇA BEM ACIMA DA PISTA */
+@keyframes fall {
+    from { transform: translateY(-100vh); opacity: 1; } /* Começa 100vh ACIMA do elemento .arrow (que é adicionado no final da lane) */
+    to { transform: translateY(0); opacity: 1; } /* Termina na posição 0 da lane (base da lane) */
+}
+
+
+/* Animação quando clica (acertou) */
+.arrow.hit {
+    animation: hitEffect 0.2s ease-out forwards;
+    box-shadow: 0 0 25px 10px var(--hit-effect-color);
+}
+@keyframes hitEffect {
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.8); filter: brightness(3.5); }
+    100% { transform: scale(1); filter: brightness(1); opacity: 0; }
+}
+
+/* Botões e seletores com estilo futurista */
+#reset-btn, .overlay button, .overlay select {
+    margin: 25px 10px;
+    padding: 18px 45px;
+    font-size: 1.4em;
+    border: 3px solid var(--target-color); /* Borda neon */
+    border-radius: 12px;
+    background-color: var(--button-bg-color);
+    color: var(--hit-effect-color);
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 12px 4px var(--target-color); /* Sombra neon */
+    font-family: 'Orbitron', sans-serif; /* Fonte do título para botões */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#reset-btn:hover, .overlay button:hover, .overlay select:hover {
+    background-color: var(--button-hover-bg-color);
+    transform: translateY(-6px) scale(1.07);
+    box-shadow: 0 0 25px 8px var(--target-color);
+}
+#reset-btn:active, .overlay button:active, .overlay select:active {
+    transform: translateY(0);
+    box-shadow: 0 0 8px 3px var(--target-color);
+}
+
+/* Estilo para overlays (tela inicial, game over) */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.98); /* Quase preto totalmente opaco */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    font-family: 'Exo 2', sans-serif;
+    color: var(--text-color);
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.7s ease-in-out;
+}
+
+.overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.overlay h2 {
+    font-size: 3.8em;
+    margin-bottom: 30px;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--score-color);
+    text-shadow: 0 0 20px var(--score-color);
+}
+
+.overlay p {
+    font-size: 2em;
+    margin-bottom: 50px;
+}
+
+.music-selection h3 {
+    font-size: 1.6em;
+    margin-top: 30px; /* Adicionado um pouco de margem acima dos h3 nos seletores */
+    margin-bottom: 20px;
+    color: var(--hit-effect-color);
+    text-shadow: 0 0 10px var(--hit-effect-color);
+}
+
+/* Feedback de Acerto (Perfect, Good, Meh, Miss) */
+.hit-feedback {
+    position: absolute;
+    top: 30%; /* Posição onde o feedback aparece */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4.5em; /* Maior e mais impactante */
+    font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 18px, 0 0 30px; /* Sombra neon mais forte */
+    opacity: 0;
+    pointer-events: none;
+    z-index: 110;
+}
+
+.hit-feedback.show {
+    animation: fadeAndMoveUp 0.6s ease-out forwards; /* Mais rápido e responsivo */
+}
+
+@keyframes fadeAndMoveUp {
+    0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 1; transform: translateX(-50%) translateY(-40px); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-90px); }
+}
+
+/* Cores específicas para feedback com brilho */
+.hit-feedback.perfect { color: var(--feedback-perfect); text-shadow: 0 0 18px var(--feedback-perfect), 0 0 30px var(--feedback-perfect); }
+.hit-feedback.good { color: var(--feedback-good); text-shadow: 0 0 18px var(--feedback-good), 0 0 30px var(--feedback-good); }
+.hit-feedback.meh { color: var(--feedback-meh); text-shadow: 0 0 18px var(--feedback-meh), 0 0 30px var(--feedback-meh); }
+.hit-feedback.miss { color: var(--feedback-miss); text-shadow: 0 0 18px var(--feedback-miss), 0 0 30px var(--feedback-miss); }

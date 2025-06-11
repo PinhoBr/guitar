@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ritmo Mestre</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Ritmo Mestre</h1>
+    <h2 id="score">Pontos: 0</h2>
+
+    <div class="health-bar-container">
+        <div id="healthBar" class="health-bar"></div>
+    </div>
+
+    <div class="game-container">
+        <div id="startScreen" class="overlay active">
+            <h2>Bem-vindo ao Ritmo Mestre!</h2>
+            <div class="music-selection">
+                <h3>Selecione uma Música:</h3>
+                <select id="musicSelector">
+                    <option value="musica.mp3">Ikimono Gakari - Netsujou no Spectrum</option>
+                    <option value="bensound-funkyelement.mp3">Bensound - Funky Element (Exemplo)</option>
+                    </select>
+
+                <h3>Selecione a Dificuldade:</h3>
+                <select id="difficultySelector">
+                    <option value="easy">Fácil</option>
+                    <option value="medium" selected>Médio</option>
+                    <option value="hard">Difícil</option>
+                </select>
+
+                <button id="startGameBtn">Começar Jogo</button>
+            </div>
+        </div>
+
+        <div id="hitFeedback" class="hit-feedback"></div>
+
+        <div class="game">
+            <div id="lane-a" class="lane"><div class="target"></div></div>
+            <div id="lane-s" class="lane"><div class="target"></div></div>
+            <div id="lane-j" class="lane"><div class="target"></div></div>
+            <div id="lane-k" class="lane"><div class="target"></div></div>
+        </div>
+    </div>
+
+    <button id="reset-btn">Reiniciar</button>
+
+    <div id="gameOverOverlay" class="overlay">
+        <h2>FIM DE JOGO!</h2>
+        <p>Sua pontuação final foi: <span id="finalScore">0</span></p>
+        <button id="restartGameBtn">Jogar Novamente</button>
+    </div>
+
+    <audio id="bgm" src="musica.mp3" loop></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
